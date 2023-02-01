@@ -1,6 +1,6 @@
 # YAKM-Continued
 
-The continued version of (Minecraft-JourneyMap-Explorer)[https://github.com/wfjsw/Minecraft-JourneyMap-Explorer], a standalone Minecraft world map tool built on leaflet.
+The continued version of [Minecraft-JourneyMap-Explorer](https://github.com/wfjsw/Minecraft-JourneyMap-Explorer), a standalone Minecraft world map tool built on leaflet.
 
 ## Quick Start
 Clone the repository, use `npm install` to install dependencies, and then use `npm run build` to pack the site.
