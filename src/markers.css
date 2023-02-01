@@ -1,0 +1,28 @@
+.leaflet-popup-customcontent-container {
+}
+
+.leaflet-popup-customcontent-title {
+  font-size: 10;
+}
+
+.leaflet-popup-customcontent-coordinate {
+  font-size: 6;
+}
+
+.leaflet-popup-customcontent-coordinate-head {
+  margin-left: 2px;
+  margin-right: 2px;
+  color: #777;
+}
+
+.leaflet-popup-customcontent-coordinate-value {
+  margin-right: 2px;
+}
+
+.leaflet-popup-customcontent-description-breakline {
+  border-top: 1px;
+}
+
+.leaflet-popup-customcontent-description {
+  font-size: 8;
+}

@@ -1,0 +1,17 @@
+.json-object-pair-key {
+  color: blueviolet;
+  margin-right: 20px;
+}
+
+.json-array-pair-key {
+  color: palevioletred;
+  margin-right: 20px;
+}
+
+.json-object-empty {
+  color: blueviolet;
+}
+
+.json-array-empty {
+  color: palevioletred;
+}

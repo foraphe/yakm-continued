@@ -1,0 +1,25 @@
+body {
+  font-family: sans-serif;
+}
+
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  background-color: #222222;
+}
+
+#app {
+  background-color: rgba(0.1, 0.1, 0.1, 0.8);
+  background-blend-mode: overlay;
+  cursor: default;
+}
+
+.leaflet-tile {
+  image-rendering: pixelated;
+}
+
+.hidden {
+  display: none;
+}
