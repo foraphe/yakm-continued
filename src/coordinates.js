@@ -75,7 +75,7 @@ L.Control.CoordinatesControl = L.Control.extend({
 
     map.whenReady(this._update, this);
 
-    map.on("click", this._updateMarker, this);
+    //map.on("click", this._updateMarker, this);
 
     // wether or not to show inputs on click
     if (options.enableUserInput) {

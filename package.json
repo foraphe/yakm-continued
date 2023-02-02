@@ -4,17 +4,15 @@
   "description": "",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html"
+    "build": "parcel build --no-source-maps index.html"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
-    "@parcel/compressor-brotli": "^2.8.3",
-    "@parcel/compressor-gzip": "^2.8.3",
     "@parcel/config-default": "^2.8.3",
+    "jquery": "^3.6.3",
+    "leaflet": "^1.9.3",
+    "leaflet-draw": "^1.0.4",
     "parcel": "^2.8.3"
   },
-  "keywords": [],
-  "dependencies": {
-    "wrangler": "^2.9.0"
-  }
+  "keywords": []
 }
