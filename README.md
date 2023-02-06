@@ -1,6 +1,6 @@
 # YAKM-Continued
 
-The continued version of [Minecraft-JourneyMap-Explorer](https://github.com/wfjsw/Minecraft-JourneyMap-Explorer), a standalone Minecraft world map tool built on leaflet.
+The continued version of [Minecraft-JourneyMap-Explorer](https://github.com/wfjsw/Minecraft-JourneyMap-Explorer), a standalone Minecraft world map tool built with leaflet.
 
 ## Quick Start
 Clone the repository, use `npm install` to install dependencies, and then use `npm run build` to pack the site.
@@ -9,11 +9,14 @@ Create the static file directory as follows:
 ```
 dist
     static:
-        settings.json  
+        settings.json
+        resource:
+            ui:
+                waypoint.png
 ```
 and put your map tiles any where you want.
 
-for `settings.json`:
+`settings.json`:
 ```
 {
     "world": {
@@ -24,8 +27,8 @@ for `settings.json`:
 }
 ```
 
-`info.json` should be a JSON object with the following keys:
-|        Name        |   Type   | Default                        |     value                                                                                       |
+`info.json` should be a JSON object with the following contents:
+|        Key         |   Type   | Default                        |     Value                                                                                       |
 |--------------------|----------|--------------------------------|-------------------------------------------------------------------------------------------------|
 |z_original          |Number    |Required                        |scale level for full resolution tiles                                                            |
 |z_maxscale          |Number    |Required                        |scale for highest scale tiles                                                                    |
@@ -34,8 +37,49 @@ for `settings.json`:
 |bounds              |Array     |Required                        |two array each with two numbers for the topleft and bottom-right corner of the map boundary      |
 |tile_size           |Number    |Required                        |size in pixels of each tile file                                                                 |
 |attribution         |String    |Required                        |Copyright (or other string) displayed on the map                                                 |
-|preview             |Array     |Required                        |?                                                                                                |
-|tiles_list          |String    |Required                        |path to tiles.json                                                                               |
-|markers             |String    |Required                        |path to markers.json                                                                             |
+|preview             |Array     |Required                        |Default center coordinates when opening the map                                                  |
+|tiles_list          |String    |Required                        |path to tiles.json (see below for details)                                                       |
+|markers             |String    |Required                        |path to markers.json (see below for details)                                                     |
 
-...todo
+An example: 
+```
+{
+  "z_original": 5,
+  "z_maxscale": 0,
+  "offset": [0, 0],
+  "bounds": [
+    [-5000, -5000],
+    [5000, 5000]
+  ],
+  "tile_size": 256,
+  "attribution": "&copy; 2023 Example",
+  "preview": [0, 0],
+  "tiles_list": "/static/data/world/tiles.json",
+  "markers": "/static/data/world/markers.json"
+}
+
+```
+
+`tiles.json` is the file in which tile file URLs are saved, an example is as follows: 
+```
+{
+    "5,-1,5": { //zoom, x, z
+        "url": "https://example.com/5,-1,5.png" // URL of the tile file
+        "mtime": 1675004857823 // Timestamp, not really used
+    },
+    ...
+}
+```
+
+`markers.json` contains an array of markers (waypoints), an example is as follows: 
+```
+[
+    {
+        "x": -12,
+        "z": 463,
+        "title": "A Point in the world",
+        "description": "just a waypoint",
+        "category": "world"
+    }
+]
+```
