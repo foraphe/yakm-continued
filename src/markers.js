@@ -35,7 +35,7 @@ L.MarkersLayer = L.Layer.extend({
 
   createMarker: function (markerData /*: MarkerInfo*/) {
     let icon = new L.Icon({
-      iconUrl: "/static/resource/ui/waypoint.png",
+      iconUrl: "/assets/marker/local-two.svg",
       iconSize: [32, 32],
       iconAnchor: [16, 0]
     });
