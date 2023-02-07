@@ -1,5 +1,4 @@
-//import * as L from "leaflet";
-//import * as $ from "jquery";
+import L from "leaflet";
 
 export interface TileInfo {
   url: string;
@@ -38,21 +37,20 @@ export class MapDataConfig {
   tiles: TilesConfig;
   markers: MarkersConfig;
 
-  constructor() {
-    this.info = null;
+  constructor(info: MapInfo) {
+    this.info = info;
     this.tiles = {};
     this.markers = [];
   }
 
-  async request(url: string) {
-    this.info = await MapDataConfig.load(url, "config");
+  async request_full() {
     const url1 = this.info.tiles_list;
     if (url1) {
-      this.tiles = await MapDataConfig.load(url1, "config");
+      this.tiles = await load(url1);
     }
     const url2 = this.info.markers;
     if (url2) {
-      this.markers = await MapDataConfig.load(url2, "config");
+      this.markers = await load(url2);
     }
     return this;
   }
@@ -102,21 +100,6 @@ export class MapDataConfig {
     const info = this.info;
     map.setView(info.preview, (info.z_original + info.tile_size) >> 1);
   }
-
-  static async load(url: string, jsonCallback: string) {
-    if (url.endsWith("js")) {
-      return $.ajax({
-        url,
-        dataType: "jsonp",
-        jsonpCallback: jsonCallback
-      }).then((data) => {
-        console.debug(`[received] ${url}`);
-        return data;
-      });
-    } else {
-      return fetch(url).then((resp) => resp.json());
-    }
-  }
 }
 
 export async function sleep(time: number) {
@@ -126,38 +109,6 @@ export async function sleep(time: number) {
     }
   );
 }
-
-// export async function load(url: string, jsonCallback: string) {
-//   return new Promise(
-//     (resolve: (cfg: any) => void, reject: (e: any) => void) => {
-//       window[jsonCallback] = function (data: any) {
-//         try {
-//           const s = JSON.stringify(data);
-//           window[jsonCallback] = undefined;
-//           setTimeout(() => {
-//             const obj = JSON.parse(s);
-//             resolve(obj);
-//           }, 1);
-//         } catch (e) {
-//           reject(e);
-//         }
-//       };
-//       let req = document.createElement("script");
-//       req.type = "text/javascript";
-//       req.src = url;
-//       req.onload = function (ev) {
-//         console.debug(`received ${url}`);
-//       };
-//       req.onerror = function (ev) {
-//         req.remove();
-//         window[jsonCallback] = undefined;
-//         reject(Error(`Loading failed for the <script> with source ${url}`));
-//       };
-
-//       document.head.appendChild(req);
-//     }
-//   );
-// }
 
 export function parseQuery() {
   let query = window.location.search;
@@ -172,4 +123,46 @@ export function parseQuery() {
     });
   }
   return queryPair;
+}
+
+let jsop_callback_n = 1;
+
+export function load(url: string) {
+  if (url.endsWith("js")) {
+    return load_jsonp(url, "yakmjspcb_" + String(jsop_callback_n++));
+  } else {
+    return fetch(url).then((resp) => resp.json());
+  }
+}
+
+function load_jsonp(url: string, jsonCallback: string) {
+  return new Promise(
+    (resolve: (cfg: any) => void, reject: (e: any) => void) => {
+      window[jsonCallback] = function (data: any) {
+        try {
+          const s = JSON.stringify(data);
+          window[jsonCallback] = undefined;
+          setTimeout(() => {
+            const obj = JSON.parse(s);
+            resolve(obj);
+          }, 1);
+        } catch (e) {
+          reject(e);
+        }
+      };
+      let req = document.createElement("script");
+      req.type = "text/javascript";
+      req.src = url;
+      req.onload = function (ev) {
+        console.debug(`received ${url}`);
+      };
+      req.onerror = function (ev) {
+        req.remove();
+        window[jsonCallback] = undefined;
+        reject(new Error(`Loading failed for the <script> with source ${url}`));
+      };
+
+      document.head.appendChild(req);
+    }
+  );
 }

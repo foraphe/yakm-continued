@@ -1,4 +1,4 @@
-//import * as L from "leaflet";
+import L from "leaflet";
 
 L.ListedTileLayer = L.TileLayer.extend({
   initialize: function (list, options) {

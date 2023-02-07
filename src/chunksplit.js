@@ -1,4 +1,4 @@
-//import * as L from "leaflet";
+import L from "leaflet";
 
 L.ChunkSplit = L.Layer.extend({
   initialize: function (stage, axisOptions, lineOptions) {

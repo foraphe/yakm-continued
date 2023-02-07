@@ -10,9 +10,7 @@ Create the static file directory as follows:
 dist
     static:
         settings.json
-        resource:
-            ui:
-                waypoint.png
+
 ```
 and put your map tiles any where you want.
 
