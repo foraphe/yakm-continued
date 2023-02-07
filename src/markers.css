@@ -2,27 +2,27 @@
 }
 
 .leaflet-popup-customcontent-title {
-  font-size: 10;
+  font-size: 1em;
 }
 
 .leaflet-popup-customcontent-coordinate {
-  font-size: 6;
+  font-size: 0.8em;
 }
 
 .leaflet-popup-customcontent-coordinate-head {
-  margin-left: 2px;
-  margin-right: 2px;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
   color: #777;
 }
 
 .leaflet-popup-customcontent-coordinate-value {
-  margin-right: 2px;
+  margin-right: 0.25em;
 }
 
 .leaflet-popup-customcontent-description-breakline {
-  border-top: 1px;
+  border-top: 0.125em;
 }
 
 .leaflet-popup-customcontent-description {
-  font-size: 8;
+  font-size: 0.9em;
 }

@@ -12,7 +12,12 @@
     "jquery": "^3.6.3",
     "leaflet": "^1.9.3",
     "leaflet-draw": "^1.0.4",
-    "parcel": "^2.8.3"
+    "parcel": "^2.8.3",
+    "parcel-reporter-static-files-copy": "^1.5.0"
   },
-  "keywords": []
+  "keywords": [],
+  "staticFiles": {
+    "staticPath": "assets",
+    "staticOutPath": "assets"
+  }
 }
