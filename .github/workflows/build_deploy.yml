@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    environment: production
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,14 +27,6 @@ jobs:
         run: npm install
       - name: Build the project
         run: npm run build
-  
-  deploy-production:
-    needs: build
-    runs-on: ubuntu-latest
-
-    environment: production
-    steps:
-      - uses: actions/checkout@v3
       - name: rsync deployment
         uses: burnett01/rsync-deployments@5.2.1
         with:
