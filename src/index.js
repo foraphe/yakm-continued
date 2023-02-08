@@ -1,14 +1,14 @@
-import "./styles.css";
+
 import { Minecraft2DCRS } from "./crs";
 import { CoordinatesControl } from "./coordinates";
-import { parseQuery, sleep, MapDataConfig } from "./config";
+import { parseQuery, sleep, MapDataConfig, load } from "./config";
 import { ListedTileLayer } from "./tilelayer";
 import { ChunkSplit } from "./chunksplit";
 import { MarkersLayer } from "./markers";
-// import { TestQTree } from "./qtreemarker"
-//import * as L from "leaflet";
-//import 'leaflet-draw';
-//import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import L from 'leaflet-draw';
+import "./styles.css";
+import "leaflet/dist/leaflet.css";
 
 // import "leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min.js";
 // import "leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css";
@@ -29,8 +29,9 @@ function fitWindow(container) {
 }
 
 async function display(url, div) {
-  let cfg = new MapDataConfig();
-  await cfg.request(url);
+  let info = await load(url);
+  let cfg = new MapDataConfig(info);
+  await cfg.request_full();
   div.innerHTML = "";
   await sleep(100);
 
@@ -290,10 +291,3 @@ main().catch(console.warn);
 //     "</span></div>";
 // });
 
-// async function test() {
-//   console.log("start");
-//   let x = await makeRequest(
-//     "https://jsonblob.com/api/jsonBlob/aeb68c8f-bdc4-11ea-8d08-df750c4c388a",
-//     "json"
-//   );
-// }

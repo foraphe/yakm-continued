@@ -1,4 +1,4 @@
-//import * as L from "leaflet";
+import L from "leaflet";
 import { Color, Solver } from "./color";
 
 import "./markers.css";

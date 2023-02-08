@@ -1,5 +1,4 @@
-//import * as L from "leaflet";
-
+import L from "leaflet";
 import "./coordinates.css";
 
 L.Control.CoordinatesControl = L.Control.extend({
