@@ -1,5 +1,6 @@
 import L from "leaflet";
 import { Color, Solver } from "./color";
+import { SVGIcon } from "./svgicon"
 
 import "./markers.css";
 
@@ -34,26 +35,27 @@ L.MarkersLayer = L.Layer.extend({
   },
 
   createMarker: function (markerData /*: MarkerInfo*/) {
-    let icon = new L.Icon({
+    let icon = new SVGIcon({
       iconUrl: "/assets/marker/local-two.svg",
-      iconSize: [32, 32],
-      iconAnchor: [16, 0]
+      iconSize: [24, 24],
+      iconAnchor: [12, 24],
+      color: markerData.color,
     });
-    icon.color = markerData.color || this.options.defaultColor;
-    icon.createIcon = function (oldIcon) {
-      let img = this._createIcon("icon", oldIcon);
-      let color = new Color(this.color);
-      let icolor = color.toIntRGB();
-      if (icolor in colorCache) {
-        img.style.filter = colorCache[icolor];
-      } else {
-        let solver = new Solver(color);
-        let result = solver.solve();
-        img.style.filter = colorCache[icolor] = result.filter;
-      }
+    //icon.color = markerData.color || this.options.defaultColor;
+    // icon.createIcon = function (oldIcon) {
+    //   let img = this._createIcon("icon", oldIcon);
+    //   let color = new Color(this.color);
+    //   let icolor = color.toIntRGB();
+    //   if (icolor in colorCache) {
+    //     img.style.filter = colorCache[icolor];
+    //   } else {
+    //     let solver = new Solver(color);
+    //     let result = solver.solve();
+    //     img.style.filter = colorCache[icolor] = result.filter;
+    //   }
 
-      return img;
-    };
+    //   return img;
+    // };
     let marker = new L.Marker(new L.LatLng(markerData.z, markerData.x), {
       icon: icon
     });
