@@ -4,3 +4,4 @@ dist
 static
 dist.tar
 yarn.lock
+.vscode
