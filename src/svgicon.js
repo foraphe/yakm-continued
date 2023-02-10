@@ -2,7 +2,7 @@ import L from 'leaflet';
 
 const svgDataCache = {}
 
-function loadSVG(url, callback) {
+function loadSVG(url, callback /* : (svgText: String) => void */) {
     let c = svgDataCache[url];
     if(c) {
         callback(c);
@@ -13,8 +13,6 @@ function loadSVG(url, callback) {
         });
     }
 }
-
-const defaultColor = "#66FFCC";
 
 L.SVGIcon = L.Icon.extend({
 
@@ -36,18 +34,31 @@ L.SVGIcon = L.Icon.extend({
 		className: 'leaflet-svg-icon'
 	},
 
+	initialize(options) {
+		L.Util.setOptions(this, options);
+		this._divRef = null;
+	},
+
     createIcon(oldIcon) {
 		const div = (oldIcon && oldIcon.tagName === 'DIV') ? oldIcon : document.createElement('div'),
 		    options = this.options;
-        
-        const _color = options.color || defaultColor;
+        const _color = options.color;
+		let sizeOption = options.iconSize;
+		if (typeof sizeOption === 'number') {
+			sizeOption = [sizeOption, sizeOption];
+		}
+		const size = L.point(sizeOption);
 		loadSVG(options.iconUrl, function(html) {
             div.innerHTML = html;
             let svg = div.querySelector("svg");
-            console.debug(svg);
-            svg.querySelectorAll("path").forEach(function(path) {
-                path.style.stroke = _color;
-            });
+			svg.setAttribute("width", String(size.x));
+			svg.setAttribute("height", String(size.y));
+			if(_color) {
+				svg.querySelectorAll("path").forEach(function(path) {
+					path.style.stroke = _color;
+				});
+			}
+			console.debug(svg);
         });
 
 		if (options.bgPos) {
@@ -55,14 +66,46 @@ L.SVGIcon = L.Icon.extend({
 			div.style.backgroundPosition = `${-bgPos.x}px ${-bgPos.y}px`;
 		}
 		this._setIconStyles(div, 'icon');
-
+		this._divRef = new WeakRef(div);
 		return div;
 	},
 
 	createShadow() {
 		return null;
-	}
+	},
 
+	updateSize(scale) {
+		if(this._divRef) {
+			const div = this._divRef.deref();
+			if(div) {
+				const options = this.options;
+				let sizeOption = options.iconSize;
+				if (typeof sizeOption === 'number') {
+					sizeOption = [sizeOption, sizeOption];
+				}
+				const size = L.point(sizeOption);
+				const sizeNew = new L.Point(Math.ceil(size.x * scale), Math.ceil(size.y * scale));
+				const anchorNew = L.point(options.iconAnchor && L.point(options.iconAnchor).divideBy(size.x / sizeNew.x) || size && size.divideBy(2, true));
+				console.debug(sizeNew, anchorNew);
+				let svg = div.querySelector("svg");
+				svg.setAttribute("width", String(sizeNew.x));
+				svg.setAttribute("height", String(sizeNew.y));
+
+				if (anchorNew) {
+					div.style.marginLeft = `${-anchorNew.x}px`;
+					div.style.marginTop  = `${-anchorNew.y}px`;
+				}
+
+				if (size) {
+					div.style.width  = `${sizeNew.x}px`;
+					div.style.height = `${sizeNew.y}px`;
+				}
+
+			} else {
+				this._divRef = null;
+			}
+		}
+	}
 });
 
 export class SVGIcon extends L.SVGIcon { }

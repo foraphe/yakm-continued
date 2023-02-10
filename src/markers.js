@@ -8,11 +8,14 @@ let colorCache = {};
 
 L.MarkersLayer = L.Layer.extend({
   options: {
-    defaultColor: "#FFDD66"
+    defaultColor: "#FFDD66",
+    autoResizeZoom: null,
+    autoResizeScale: 0.5,
   },
 
   initialize: function (config /*: MarkersConfig*/, options) {
     L.Util.setOptions(this, options);
+    this._map = null;
     let markers = (this.markers = []);
     let data = (this.data = []);
     for (const m of config) {
@@ -22,13 +25,33 @@ L.MarkersLayer = L.Layer.extend({
     }
   },
 
+  onZoomLevelChange(e) {
+    const autoResizeZoom = this.options.autoResizeZoom;
+    if(autoResizeZoom) {
+      const map = e.sourceTarget;
+      const zoom = map.getZoom();
+      if(zoom <= autoResizeZoom) {
+        const scale = Math.pow(this.options.autoResizeScale, autoResizeZoom - zoom);
+        console.debug(zoom, scale, this.markers);
+        this.markers.forEach(function(marker) {
+          const icon = marker.options.icon;
+          if(icon && icon.updateSize) {
+            icon.updateSize(scale);
+          }
+        })
+      }
+    }
+  },
+
   onAdd: function (map /*: L.Map*/) {
     for (const marker of this.markers) {
       map.addLayer(marker);
     }
+    map.on("zoom", this.onZoomLevelChange, this);
   },
 
   onRemove: function (map /*: L.Map*/) {
+    map.off("zoom", this.onZoomLevelChange, this);
     for (const marker of this.markers) {
       map.removeLayer(marker);
     }
@@ -37,29 +60,15 @@ L.MarkersLayer = L.Layer.extend({
   createMarker: function (markerData /*: MarkerInfo*/) {
     let icon = new SVGIcon({
       iconUrl: "/assets/marker/local-two.svg",
-      iconSize: [24, 24],
-      iconAnchor: [12, 24],
-      color: markerData.color,
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      color: markerData.color || this.options.defaultColor
     });
-    //icon.color = markerData.color || this.options.defaultColor;
-    // icon.createIcon = function (oldIcon) {
-    //   let img = this._createIcon("icon", oldIcon);
-    //   let color = new Color(this.color);
-    //   let icolor = color.toIntRGB();
-    //   if (icolor in colorCache) {
-    //     img.style.filter = colorCache[icolor];
-    //   } else {
-    //     let solver = new Solver(color);
-    //     let result = solver.solve();
-    //     img.style.filter = colorCache[icolor] = result.filter;
-    //   }
-
-    //   return img;
-    // };
     let marker = new L.Marker(new L.LatLng(markerData.z, markerData.x), {
       icon: icon
     });
     marker.bindPopup(this.createPopup(markerData));
+    console.debug(marker);
     let handler = {
       set: function (obj, prop, value) {
         obj[prop] = value;

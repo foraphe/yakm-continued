@@ -68,7 +68,7 @@ async function display(url, div) {
   });
   coordinates.addTo(map);
 
-  cfg.setMapPreview(map);
+  
 
   let chunkSplitLayer = new ChunkSplit(
     [
@@ -125,7 +125,7 @@ async function display(url, div) {
     drawnItems.addLayer(layer);
   });
 
-  let markersLayer = new MarkersLayer(cfg.getMarkersConfig(), {});
+  let markersLayer = new MarkersLayer(cfg.getMarkersConfig(), { autoResizeZoom: 2 });
   markersLayer.addTo(map);
 
   let ctrl = new L.Control.Layers(
@@ -143,9 +143,7 @@ async function display(url, div) {
 
   window["map_instance"] = map;
   window["map_data"] = cfg;
-
-  map.setView([0, 0], initialZoom);
-
+  cfg.setMapPreview(map);
   return map;
 }
 
