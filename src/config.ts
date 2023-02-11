@@ -98,7 +98,10 @@ export class MapDataConfig {
 
   setMapPreview(map: L.Map) {
     const info = this.info;
-    map.setView(info.preview, (info.z_original + info.tile_size) >> 1);
+    const preview = L.latLng(info.preview);
+    const z = Math.ceil((info.z_original + info.z_maxscale) / 2);
+    console.info("set preview:", preview, z);
+    map.setView(preview, z);
   }
 }
 

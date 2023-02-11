@@ -3,7 +3,7 @@
 The continued version of [Minecraft-JourneyMap-Explorer](https://github.com/wfjsw/Minecraft-JourneyMap-Explorer), a standalone Minecraft world map tool built with leaflet.
 
 ## Quick Start
-Clone the repository, use `npm install` to install dependencies, and then use `npm run build` to pack the site.
+Clone the repository, use `yarn install` to install dependencies, and then use `yarn run build` to pack the site, or optionally, use `yarn run start` to run a live dev server.
 You'll need the tile files and settings to display.
 Create the static file directory as follows:
 ```
