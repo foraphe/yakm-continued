@@ -5,7 +5,7 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build --no-source-maps index.html"
+    "build": "parcel build index.html"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
