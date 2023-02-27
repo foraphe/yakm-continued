@@ -10,6 +10,75 @@ import L from 'leaflet-draw';
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
 
+// from https://gist.github.com/emtiu/6098482
+
+// Usage:
+//   var someButton = new L.Control.Button(options).addTo(map);
+// This calls OnAdd(). See the code for what options are required
+// The third parameter passed to L.DomEvent.addListener is the 'this' context
+// to use in the callback (second parameter).
+
+L.Control.Button = L.Control.extend({
+  options: {
+      position: 'topleft'
+  },
+  initialize: function (options) {
+      this._button = {};
+      this.setButton(options);
+      L.setOptions(this, options);
+  },
+
+  onAdd: function (map) {
+      this._map = map;
+
+      this._container = L.DomUtil.create('div', 'leaflet-control-button leaflet-bar');
+
+      this._update();
+      return this._container;
+  },
+
+  onRemove: function (map) {
+      this._button = {};
+      this._update();
+  },
+
+  setButton: function (options) {
+      var button = {
+          'class': options.class,
+          'text': options.text,
+          'onClick': options.onClick,
+          'title': options.title
+      };
+
+      this._button = button;
+      this._update();
+  },
+
+  _update: function () {
+      if (!this._map) {
+          return;
+      }
+
+      this._container.innerHTML = '';
+      this._makeButton(this._button);
+  },
+
+  _makeButton: function (button) {
+      var newButton = L.DomUtil.create('a', 'leaflet-buttons-control-button ' + button.class, this._container);
+      newButton.href = '#';
+      newButton.innerHTML = button.text;
+      newButton.title = button.title;
+
+      onClick = function (event) {
+          button.onClick(event, newButton);
+      };
+
+      L.DomEvent
+          .addListener(newButton, 'click', onClick, this);
+      return newButton;
+  }
+});
+
 // import "leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min.js";
 // import "leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css";
 
@@ -68,7 +137,7 @@ async function display(url, div) {
   });
   coordinates.addTo(map);
 
-  
+
 
   let chunkSplitLayer = new ChunkSplit(
     [
@@ -139,6 +208,12 @@ async function display(url, div) {
     }
   );
   ctrl.addTo(map);
+
+  let btnreturn = new L.Control.Button({
+    text: `<img src="/assets/home.png" style="position:absolute;top:7px;left: 7px;width:16px;height:16px">`,
+    onClick: renav,
+    title: '返回世界选择'
+  }).addTo(map);
 
 
   window["map_instance"] = map;
@@ -253,7 +328,7 @@ function i18n() {
   }
 }
 
-async function main() {
+async function main(world) {
   i18n();
 
   let div = document.getElementById("app");
@@ -265,27 +340,65 @@ async function main() {
   let settingsURL = "/static/settings.json";
   let settings = await fetch(settingsURL).then((resp) => resp.json());
 
-  let sel = settings.default;
+  let sel = world || settings.default;
+  /*
   if ("world" in query) {
     let v = query["world"];
     if (v in settings.world) {
       sel = v;
     }
   }
+  */
 
   await display(settings.world[sel], div);
 }
 
-main().catch(console.warn);
+async function loadLazy(world) {
+  return new Promise((resolve, reject) => {
+    main(world)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch(console.warn)
+  });
+}
 
-// map.addEventListener("mousemove", (ev) => {
-//   let div = document.getElementById("json");
-//   let latlng = ev.latlng;
-//   div.innerHTML =
-//     "<div><span>" +
-//     Math.round(latlng.lat * 100) / 100 +
-//     "</span><span>" +
-//     Math.round(latlng.lng * 100) / 100 +
-//     "</span></div>";
-// });
+window.addEventListener('load', ev => {
+  document.getElementById('navigator').innerHTML = `
+  <div id="selector" class="center">
+  <h3>请选择世界</h3>
+  <select name="世界" id="nav-world">
+    <option value="null" disabled>请选择一项</option> <!-- For Safari -->
+    <option value="v1">v1</option>
+    <option value="v2">v2</option>
+    <option value="v3">v3</option>
+    <option value="v4">v4</option>
+    <option value="v5" selected>v5</option>
+  </select>
+  <p></p>
+  <button id="nav-btn">进入</button>
+</div>`;
+  renav();
+})
+
+function renav() {
+  document.getElementById('navigator').classList.remove('hidden');
+  document.getElementById('loading').classList.remove('hidden');
+  if (window.map_instance) {
+    window.map_instance.off();
+    window.map_instance.remove();
+  }
+  window["map_instance"] = undefined;
+  window["map_data"] = undefined;
+  document.getElementById('nav-btn').addEventListener('click', (el, ev) => {
+    let world = document.getElementById('nav-world').value;
+    loadLazy(world)
+      .then(res => {
+        document.getElementById('loading').classList.add('hidden');
+      })
+    document.getElementById('navigator').classList.add('hidden');
+  });
+}
+
+
 

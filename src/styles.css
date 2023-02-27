@@ -23,3 +23,51 @@ body {
 .hidden {
   display: none;
 }
+
+#navigator {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: #a0a0a0;
+  z-index: 2500;
+}
+
+.center {
+  margin: auto;
+  text-align: center;
+}
+
+h3 {
+  margin-top: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#nav-btn {
+  padding: 0.5rem;
+  background-color: rgba(0,0,0,0);
+  border-style: solid;
+  border-radius: 0.1rem;
+  transition: 0.3s;
+}
+
+#nav-btn:hover {
+  background-color: rgba(220,220,220,255);
+}
+
+#nav-world {
+  min-width: 12vw;
+  width: fit-content;
+  max-width: 60vw;
+  padding: 0.1rem 0.3rem;
+}
+
+#loading {
+  position: fixed;
+  width: 20rem;
+  height: 20rem;
+  left: calc(50% - 10rem);
+  top: calc(50% - 10rem);
+  z-index: 2400;
+}
