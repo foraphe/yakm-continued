@@ -69,12 +69,10 @@ L.Control.Button = L.Control.extend({
       newButton.innerHTML = button.text;
       newButton.title = button.title;
 
-      onClick = function (event) {
-          button.onClick(event, newButton);
-      };
-
       L.DomEvent
-          .addListener(newButton, 'click', onClick, this);
+          .addListener(newButton, 'click', (ev) => {
+            button.onClick(ev, newButton);
+          }, this);
       return newButton;
   }
 });
