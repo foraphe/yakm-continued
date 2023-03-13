@@ -13,7 +13,21 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.min.css"
     crossorigin="" />
 
-  <div id="navigator" class="hidden"></div>
+  <div id="navigator" class="hidden">
+    <div id="selector" class="center">
+      <h3>请选择世界</h3>
+      <select name="世界" id="nav-world">
+        <option value="null" disabled>请选择一项</option> <!-- For Safari -->
+        <option value="v1">v1</option>
+        <option value="v2">v2</option>
+        <option value="v3">v3</option>
+        <option value="v4">v4</option>
+        <option value="v5" selected>v5</option>
+      </select>
+      <p></p>
+      <button id="nav-btn">进入</button>
+    </div>
+  </div>
   <div id="loading">
     <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
       y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
@@ -30,6 +44,7 @@
   <script>var radius; window.type = true;</script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.min.js"></script>
+  <script type="module" src="src/customButton.js"></script>
   <script type="module" src="src/index.js"></script>
 
 </body>

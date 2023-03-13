@@ -114,16 +114,10 @@ export async function sleep(time: number) {
 }
 
 export function parseQuery() {
-  let query = window.location.search;
   let queryPair: { [key: string]: string } = {};
-  if (query.startsWith("?")) {
-    query = query.substring(1);
-    query.split("&").forEach((pair) => {
-      let m = pair.split("=", 2);
-      let key = m[0];
-      let val = m[1];
-      queryPair[key] = val;
-    });
+  let url = new URL(decodeURI(window.location.href));
+  for(let [key, val] of url.searchParams.entries()) {
+    url[key] = val;
   }
   return queryPair;
 }

@@ -362,32 +362,6 @@ async function loadLazy(world) {
 }
 
 window.addEventListener('load', ev => {
-  document.getElementById('navigator').innerHTML = `
-  <div id="selector" class="center">
-  <h3>请选择世界</h3>
-  <select name="世界" id="nav-world">
-    <option value="null" disabled>请选择一项</option> <!-- For Safari -->
-    <option value="v1">v1</option>
-    <option value="v2">v2</option>
-    <option value="v3">v3</option>
-    <option value="v4">v4</option>
-    <option value="v5" selected>v5</option>
-  </select>
-  <p></p>
-  <button id="nav-btn">进入</button>
-</div>`;
-  renav();
-})
-
-function renav() {
-  document.getElementById('navigator').classList.remove('hidden');
-  document.getElementById('loading').classList.remove('hidden');
-  if (window.map_instance) {
-    window.map_instance.off();
-    window.map_instance.remove();
-  }
-  window["map_instance"] = undefined;
-  window["map_data"] = undefined;
   document.getElementById('nav-btn').addEventListener('click', (el, ev) => {
     let world = document.getElementById('nav-world').value;
     loadLazy(world)
@@ -396,6 +370,19 @@ function renav() {
       })
     document.getElementById('navigator').classList.add('hidden');
   });
+  renav();
+})
+
+function renav() {
+  document.getElementById('loading').classList.remove('hidden');
+  if (window.map_instance) {
+    window.map_instance.off();
+    window.map_instance.remove();
+  }
+  window["map_instance"] = undefined;
+  window["map_data"] = undefined;
+
+  document.getElementById('navigator').classList.remove('hidden');
 }
 
 
